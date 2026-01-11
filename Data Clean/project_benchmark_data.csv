@@ -1,0 +1,11 @@
+Task_ID,Appliance,Avg_Power_kW,Preferred_Start_Hour,Duration_Hours,Is_Shiftable
+1,Fridge,0.3,0,24,False
+2,Lights,1.09,6,2,False
+3,Lights,1.09,18,5,False
+4,TV,1.1,19,3,False
+5,Microwave,1.1,12,1,False
+6,Microwave,1.1,19,1,False
+7,Air Conditioning,3.5,13,4,False
+8,Washing Machine,1.1,9,2,True
+9,Dishwasher,1.1,20,2,True
+10,Heater,3.49,18,4,True
