@@ -287,7 +287,7 @@ st.pyplot(fig_baseline)
 
 
 # Sidebar
-st.sidebar.markdown("<h1 style='text-align: center; font-size: 80px;'>⚡</h1>", unsafe_allow_html=True)
+
 st.sidebar.header("Optimization Settings")
 
 # Parameter Presets
