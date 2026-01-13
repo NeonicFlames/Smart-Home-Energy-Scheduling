@@ -539,15 +539,20 @@ if st.button("Start Optimization", type="primary"):
             # Create detailed DataFrame
             iteration_data = []
             for i in range(len(history['iteration'])):
+                # Handle potential infinite values (when no valid solutions found yet)
+                global_best = history['global_best_cost'][i]
+                iter_best = history['iter_best_cost'][i]
+                iter_worst = history['iter_worst_cost'][i]
+                
                 iteration_data.append({
                     'Iteration': history['iteration'][i],
                     'Valid Ants': history['valid_count'][i],
                     'Invalid Ants': history['invalid_count'][i],
                     'Success Rate': f"{history['valid_count'][i]/NUM_ANTS*100:.0f}%",
                     'Avg Violation (kW)': f"{history['avg_violation'][i]:.2f}",
-                    'Global Best (RM)': f"{history['global_best_cost'][i]:.2f}",  # Changed: Global cumulative best
-                    'This Iter Best (RM)': f"{history['iter_best_cost'][i]:.2f}",  # New: This iteration's best
-                    'This Iter Worst (RM)': f"{history['iter_worst_cost'][i]:.2f}" # Changed: This iteration's worst
+                    'Global Best (RM)': f"{global_best:.2f}" if global_best != float('inf') else "N/A",
+                    'This Iter Best (RM)': f"{iter_best:.2f}" if iter_best != float('inf') else "N/A",
+                    'This Iter Worst (RM)': f"{iter_worst:.2f}" if iter_worst != float('inf') else "N/A"
                 })
             
             iteration_df = pd.DataFrame(iteration_data)
