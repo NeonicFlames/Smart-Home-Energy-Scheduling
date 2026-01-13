@@ -10,8 +10,8 @@ from datetime import datetime
 # ==========================================
 
 # Malaysian Tariff (Tariff B - Domestic)
-OFF_PEAK_RATE = 0.418  # RM/kWh (22:00 - 08:00)
-PEAK_RATE = 0.459      # RM/kWh (08:00 - 22:00)
+OFF_PEAK_RATE = 0.4183  # RM/kWh (22:00 - 08:00)
+PEAK_RATE = 0.4592      # RM/kWh (08:00 - 22:00)
 
 # Benchmark Dataset (Standard for Project)
 TASKS_DATA = [
