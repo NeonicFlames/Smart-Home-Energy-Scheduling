@@ -214,15 +214,55 @@ with col1:
 with col2:
     st.warning(f"**Peak Rate** (08:00-22:00): **RM {PEAK_RATE:.3f}/kWh**")
 
-# 2. Appliance Data (Below)
-df_display = pd.DataFrame(TASKS_DATA)
-df_display['Power (kW)'] = df_display['power']
-df_display['Duration'] = df_display['dur'].apply(lambda x: f"{x}h")
-df_display['Preferred Time'] = df_display['pref'].apply(lambda x: f"{x:02d}:00")
-df_display['Shiftable'] = df_display['shift'].apply(lambda x: "✅" if x else "❌")
 
-st.markdown("**Appliance Dataset:**")
-st.table(df_display[['name', 'Power (kW)', 'Preferred Time', 'Duration', 'Shiftable']])
+
+# Initialize session state
+if 'shiftable_states' not in st.session_state:
+    st.session_state.shiftable_states = {task['id']: task['shift'] for task in TASKS_DATA}
+
+# Create custom table with checkboxes
+# Table Header
+header_cols = st.columns([3, 1.5, 2, 1.5, 1.5])
+with header_cols[0]:
+    st.markdown("**Appliance**")
+with header_cols[1]:
+    st.markdown("**Power (kW)**")
+with header_cols[2]:
+    st.markdown("**Preferred Time**")
+with header_cols[3]:
+    st.markdown("**Duration**")
+with header_cols[4]:
+    st.markdown("**Shiftable**")
+
+st.markdown("---")
+
+# Table Rows
+for task in TASKS_DATA:
+    row_cols = st.columns([3, 1.5, 2, 1.5, 1.5])
+    
+    with row_cols[0]:
+        st.write(task['name'])
+    with row_cols[1]:
+        st.write(f"{task['power']:.2f}")
+    with row_cols[2]:
+        st.write(f"{task['pref']:02d}:00")
+    with row_cols[3]:
+        st.write(f"{task['dur']}h")
+    with row_cols[4]:
+        # Checkbox in the table
+        is_shiftable = st.checkbox(
+            "✓",
+            value=st.session_state.shiftable_states[task['id']],
+            key=f"shift_{task['id']}",
+            label_visibility="collapsed"
+        )
+        st.session_state.shiftable_states[task['id']] = is_shiftable
+
+# Update TASKS_DATA based on checkbox states
+for task in TASKS_DATA:
+    task['shift'] = st.session_state.shiftable_states[task['id']]
+
+
 
 # Baseline Metrics (Before Optimization)
 st.markdown("**Baseline (No Optimization):**")
