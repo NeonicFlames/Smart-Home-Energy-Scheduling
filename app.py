@@ -199,7 +199,7 @@ def run_aco(num_ants, num_iterations, alpha, beta, evaporation_rate, w_discomfor
 # 4. STREAMLIT UI
 # ==========================================
 
-st.set_page_config(page_title="Smart Home Energy SCHEDULER", layout="wide")
+st.set_page_config(page_title="Smart Home Energy Scheduler", layout="wide")
 
 st.title("Smart Home Energy Scheduling using Ant Colony Optimization")
 
