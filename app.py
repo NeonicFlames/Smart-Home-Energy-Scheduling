@@ -383,8 +383,8 @@ current = PRESETS[st.session_state.preset]
 with st.sidebar.expander("ACO Hyperparameters", expanded=True):
     NUM_ANTS = st.number_input("Number of Ants", min_value=5, max_value=100, value=current["ants"], step=5)
     NUM_ITERATIONS = st.number_input("Iterations", min_value=10, max_value=500, value=current["iterations"], step=10)
-    ALPHA = st.slider("Alpha (Pheromone Importance)", 0.1, 5.0, current["alpha"], 0.1)
-    BETA = st.slider("Beta (Heuristic Importance)", 0.1, 5.0, current["beta"], 0.1)
+    ALPHA = st.slider("Alpha (Pheromone Importance)", 0.0, 5.0, current["alpha"], 0.1)
+    BETA = st.slider("Beta (Heuristic Importance)", 0.0, 5.0, current["beta"], 0.1)
     EVAPORATION_RATE = st.slider("Evaporation Rate", 0.0, 1.0, current["evaporation"], 0.05)
 
 with st.sidebar.expander("Constraints & Weights", expanded=True):
