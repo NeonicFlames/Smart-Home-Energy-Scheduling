@@ -164,21 +164,23 @@ def run_aco(num_ants, num_iterations, alpha, beta, evaporation_rate, w_discomfor
                     pheromone[idx][hour] += deposit
         
         # Record History (Enhanced)
-        # Track iteration statistics
-        iter_best = min(ant_costs) if ant_costs else float('inf')
-        iter_worst = max(ant_costs) if ant_costs else 0
+        # Track iteration statistics - separate valid costs from all costs
+        valid_costs = [path[2] for path in ant_paths if path[4]]  # cost where is_valid=True
         
-        # Update global best (cumulative - can only improve)
-        if iter_best < global_best_cost:
+        iter_best = min(valid_costs) if valid_costs else float('inf')
+        iter_worst = max(valid_costs) if valid_costs else 0
+        
+        # Update global best (cumulative - can only improve, only valid solutions)
+        if valid_costs and iter_best < global_best_cost:
             global_best_cost = iter_best
         
         history['iteration'].append(iteration + 1)
         history['valid_count'].append(valid_ants)
         history['invalid_count'].append(num_ants - valid_ants)
         history['avg_violation'].append(total_violation / num_ants if num_ants > 0 else 0)
-        history['global_best_cost'].append(global_best_cost)  # Cumulative best
-        history['iter_best_cost'].append(iter_best)           # This iteration's best
-        history['iter_worst_cost'].append(iter_worst)         # This iteration's worst
+        history['global_best_cost'].append(global_best_cost if global_best_cost != float('inf') else iter_best)
+        history['iter_best_cost'].append(iter_best)
+        history['iter_worst_cost'].append(iter_worst)
         
         if best_overall_metrics[2]: # If valid solution found yet
            history['cost'].append(best_overall_metrics[0])
@@ -539,15 +541,20 @@ if st.button("Start Optimization", type="primary"):
             # Create detailed DataFrame
             iteration_data = []
             for i in range(len(history['iteration'])):
+                # Handle potential infinite values (when no valid solutions found yet)
+                global_best = history['global_best_cost'][i]
+                iter_best = history['iter_best_cost'][i]
+                iter_worst = history['iter_worst_cost'][i]
+                
                 iteration_data.append({
                     'Iteration': history['iteration'][i],
                     'Valid Ants': history['valid_count'][i],
                     'Invalid Ants': history['invalid_count'][i],
                     'Success Rate': f"{history['valid_count'][i]/NUM_ANTS*100:.0f}%",
                     'Avg Violation (kW)': f"{history['avg_violation'][i]:.2f}",
-                    'Global Best (RM)': f"{history['global_best_cost'][i]:.2f}",  # Changed: Global cumulative best
-                    'This Iter Best (RM)': f"{history['iter_best_cost'][i]:.2f}",  # New: This iteration's best
-                    'This Iter Worst (RM)': f"{history['iter_worst_cost'][i]:.2f}" # Changed: This iteration's worst
+                    'Global Best (RM)': f"{global_best:.2f}" if global_best != float('inf') else "N/A",
+                    'This Iter Best (RM)': f"{iter_best:.2f}" if iter_best != float('inf') else "N/A",
+                    'This Iter Worst (RM)': f"{iter_worst:.2f}" if iter_worst != float('inf') else "N/A"
                 })
             
             iteration_df = pd.DataFrame(iteration_data)
